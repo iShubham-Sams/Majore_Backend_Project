@@ -1,7 +1,7 @@
 // const connectWithMongo = require("./mongo/index");
 import express, { Application } from "express";
 import { router } from "./routes";
-const connectWithMongoose = require("./config/mongoose/index");
+const connectWithMongoose = require("./config/mongoose");
 require("dotenv").config();
 const app: Application = express();
 const port: number = parseInt(process.env.PORT ?? "3000");

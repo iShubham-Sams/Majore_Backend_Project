@@ -1,5 +1,5 @@
 // const connectWithMongo = require("./mongo/index");
-import express, { Application, Request, Response } from "express";
+import express, { Application } from "express";
 import { router } from "./routes";
 const connectWithMongoose = require("./config/mongoose/index");
 require("dotenv").config();

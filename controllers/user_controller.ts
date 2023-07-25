@@ -1,4 +1,33 @@
 import { Response, Request } from "express";
-export const userController = (req: Request, res: Response) => {
+import { User } from "../models/user";
+
+// for sign up
+export const createController = (req: Request, res: Response) => {
+  if (req.body.password !== req.body.confirm_password) {
+    return res.redirect("back");
+  }
+  User.findOne({ email: req.body.email })
+    .then((user) => {
+      if (!user) {
+        User.create(req.body)
+          .then(() => {
+            return res.redirect("/user/sign-in");
+          })
+          .catch((error) => {
+            console.log("error in finding user in sign up");
+            return res.redirect("back");
+          });
+      } else {
+        return res.redirect("");
+      }
+    })
+    .catch((err) => {
+      console.log("error in finding user in sign up");
+      return;
+    });
+};
+//
+export const createSession = (req: Request, res: Response) => {
   res.send("<h1>This is user controller</h1>");
 };
+// for sign in

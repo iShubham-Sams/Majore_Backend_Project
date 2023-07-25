@@ -1,6 +1,20 @@
 import { Response, Request } from "express";
 import { User } from "../models/user";
 
+export const getUserProfileController = (req: Request, res: Response) => {
+  if (req.cookies.user_id) {
+    User.findById(req.cookies.user_id)
+      .then((user) => {
+        return res.send(user);
+      })
+      .catch((error) => {
+        return res.send("User Not Found");
+      });
+  } else {
+    return res.send("User Unauthorize");
+  }
+};
+
 // for sign up user and store in data base
 export const createController = (req: Request, res: Response) => {
   if (req.body.password !== req.body.confirm_password) {

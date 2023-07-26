@@ -1,5 +1,5 @@
+import { NextFunction, Response } from "express";
 import { User } from "../models/user";
-
 const passport = require("passport");
 
 const LocalStrategy = require("passport-local").Strategy;
@@ -10,13 +10,11 @@ passport.use(
     {
       usernameField: "email",
     },
-    function (email: any, password: any, done: any) {
-      console.log(email);
-
+    function (email: string, password: string, done: any) {
       // find a user and establish the identity
       User.findOne({ email: email })
         .then((user) => {
-          console.log(user);
+          console.log(user, "user");
 
           if (!user || user.password != password) {
             console.log("Invalid Username/Password");
@@ -27,7 +25,7 @@ passport.use(
         })
         .catch((error) => {
           if (error) {
-            console.log("Error in finding user --> Passport");
+            console.log("Error in finding user --> passport");
             return done(error);
           }
         });
@@ -37,7 +35,7 @@ passport.use(
 
 // , function (err: any, user: any) {
 //   if (err) {
-//     console.log("Error in finding user --> Passport");
+//     console.log("Error in finding user --> passport");
 //     return done(err);
 //   }
 
@@ -52,12 +50,34 @@ passport.serializeUser(function (user: any, done: any) {
 passport.deserializeUser(function (id: any, done: any) {
   User.findById(id, function (err: any, user: any) {
     if (err) {
-      console.log("Error in finding user --> Passport");
+      console.log("Error in finding user --> passport");
       return done(err);
     }
 
     return done(null, user);
   });
 });
+// check is user authenticated passport.checkAuthentication
+passport.checkAuthentication = (
+  req: any,
+  res: Response,
+  next: NextFunction
+) => {
+  if (req.isAuthenticated()) {
+    return next();
+  } else {
+    return res.send("Unauthorize");
+  }
+};
+passport.setAuthenticatedUser = (
+  req: any,
+  res: Response,
+  next: NextFunction
+) => {
+  if (req.isAuthenticated()) {
+    res.locals.user = req.user;
+  }
+  next();
+};
 
 module.exports = passport;

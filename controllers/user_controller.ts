@@ -11,7 +11,7 @@ export const createController = (req: Request, res: Response) => {
       if (!user) {
         User.create(req.body)
           .then(() => {
-            return res.redirect("/user/sign-in");
+            return res.send("/user/sign-in");
           })
           .catch((error) => {
             console.log("error in finding user in sign up");
@@ -28,6 +28,6 @@ export const createController = (req: Request, res: Response) => {
 };
 //
 export const createSession = (req: Request, res: Response) => {
-  res.send("<h1>This is user controller</h1>");
+  res.send("Session Created");
 };
 // for sign in

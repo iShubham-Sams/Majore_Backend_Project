@@ -2,29 +2,23 @@ import { Response, Request } from "express";
 import { User } from "../models/user";
 
 // for sign up
-export const createController = (req: Request, res: Response) => {
-  if (req.body.password !== req.body.confirm_password) {
-    return res.redirect("back");
-  }
-  User.findOne({ email: req.body.email })
-    .then((user) => {
-      if (!user) {
-        User.create(req.body)
-          .then(() => {
-            return res.send("/user/sign-in");
-          })
-          .catch((error) => {
-            console.log("error in finding user in sign up");
-            return res.redirect("back");
-          });
-      } else {
-        return res.redirect("");
+export const createController = async (req: Request, res: Response) => {
+  try {
+    if (req.body.password !== req.body.confirm_password) {
+      throw new Error("Password didn't Match");
+    }
+    const user = await User.findOne({ email: req.body.email });
+    if (!user) {
+      const createUser = await User.create(req.body);
+      if (createUser) {
+        return res.send("User Create Successfully");
       }
-    })
-    .catch((err) => {
-      console.log("error in finding user in sign up");
-      return;
-    });
+    } else {
+      return res.send("User Already exist");
+    }
+  } catch (error) {
+    console.log("Error while creating user");
+  }
 };
 //
 export const createSession = (req: Request, res: Response) => {

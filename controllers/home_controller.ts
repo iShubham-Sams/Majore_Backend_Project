@@ -2,20 +2,22 @@ import { Response, Request } from "express";
 import { Post } from "../models/post";
 import { User } from "../models/user";
 
-export const homeController = (req: Request, res: Response) => {
-  // res.cookie("user_id", 25);
-  // return res.end("<h1>Express is up for the codial</h1>");
+export const homeController = async (req: Request, res: Response) => {
+  try {
+    let posts = await Post.find({})
+      .populate("user")
+      .populate({
+        path: "comments",
+        populate: {
+          path: "user",
+        },
+      })
+      .exec();
+    let user = await User.find({});
 
-  Post.find({})
-    .populate("user")
-    .populate({ path: "comments" })
-    .exec()
-    .then(() => {
-      User.find({}).then((allUsers) => {
-        return res.send(allUsers);
-      });
-    })
-    .catch((err) => {
-      return res.send("Error while finding Post");
-    });
+    return res.send(user);
+  } catch (error) {
+    console.log(error, "errr");
+    return;
+  }
 };

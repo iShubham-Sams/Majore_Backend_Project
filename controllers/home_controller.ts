@@ -7,6 +7,7 @@ export const homeController = (req: Request, res: Response) => {
 
   Post.find({})
     .populate("user")
+    .populate({ path: "comments" })
     .exec()
     .then((data) => {
       return res.send(data);

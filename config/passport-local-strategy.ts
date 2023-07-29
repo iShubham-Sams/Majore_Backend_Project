@@ -48,14 +48,16 @@ passport.serializeUser(function (user: any, done: any) {
 
 // deserializing the user from the key in the cookies
 passport.deserializeUser(function (id: any, done: any) {
-  User.findById(id, function (err: any, user: any) {
-    if (err) {
-      console.log("Error in finding user --> passport");
-      return done(err);
-    }
-
-    return done(null, user);
-  });
+  User.findById(id)
+    .then((user) => {
+      return done(null, user);
+    })
+    .catch((err) => {
+      if (err) {
+        console.log("Error in finding user --> passport");
+        return done(err);
+      }
+    });
 });
 // check is user authenticated passport.checkAuthentication
 passport.checkAuthentication = (

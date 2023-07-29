@@ -2,6 +2,7 @@ import express from "express";
 import {
   createController,
   createSession,
+  logoutSession,
 } from "../controllers/user_controller";
 const passport = require("passport");
 export const userRouter = express.Router();
@@ -13,3 +14,5 @@ userRouter.post(
   passport.authenticate("local", { failureMessage: true }),
   createSession
 );
+
+userRouter.post("/logout", logoutSession);

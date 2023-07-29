@@ -31,3 +31,8 @@ export const createSession = (req: Request, res: Response) => {
   res.send("Session Created");
 };
 // for sign in
+
+export const logoutSession = (req: any, res: Response) => {
+  req.logOut();
+  return res.send("logout done");
+};

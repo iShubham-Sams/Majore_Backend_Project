@@ -1,5 +1,6 @@
 import { Response, Request } from "express";
 import { Post } from "../models/post";
+import { User } from "../models/user";
 
 export const homeController = (req: Request, res: Response) => {
   // res.cookie("user_id", 25);
@@ -9,8 +10,10 @@ export const homeController = (req: Request, res: Response) => {
     .populate("user")
     .populate({ path: "comments" })
     .exec()
-    .then((data) => {
-      return res.send(data);
+    .then(() => {
+      User.find({}).then((allUsers) => {
+        return res.send(allUsers);
+      });
     })
     .catch((err) => {
       return res.send("Error while finding Post");

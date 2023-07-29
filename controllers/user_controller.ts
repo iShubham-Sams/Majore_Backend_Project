@@ -36,3 +36,17 @@ export const logoutSession = (req: any, res: Response) => {
   req.logOut();
   return res.send("logout done");
 };
+
+export const updteUserProfile = (req: any, res: Response) => {
+  if (req.user.id === req.params.id) {
+    User.findByIdAndUpdate(req.params.id, req.body)
+      .then((data) => {
+        return res.send("Updated Successfully");
+      })
+      .catch((err) => {
+        return res.status(401).send("Unauthorized");
+      });
+  } else {
+    return res.send("id not match");
+  }
+};

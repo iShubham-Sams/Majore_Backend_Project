@@ -1,5 +1,8 @@
 import express from "express";
-import { createCommentOverPostController } from "../controllers/comment_controller";
+import {
+  createCommentOverPostController,
+  destroy,
+} from "../controllers/comment_controller";
 const passport = require("../config/passport-local-strategy");
 export const commentRoute = express.Router();
 
@@ -8,3 +11,4 @@ commentRoute.post(
   passport.checkAuthentication,
   createCommentOverPostController
 );
+commentRoute.delete("/destroy/:id", passport.checkAuthentication, destroy);

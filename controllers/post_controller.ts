@@ -22,8 +22,6 @@ export const post_controller = (req: Request, res: Response) => {
 //     });
 // };
 export const createPost = (req: any, res: Response) => {
-  console.log(req.body);
-
   Post.create({
     content: req.body.content,
     user: req.user._id,

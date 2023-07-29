@@ -25,3 +25,17 @@ export const createCommentOverPostController = (req: any, res: Response) => {
       console.log("Error while finding post");
     });
 };
+
+export const destroy = (req: any, res: Response) => {
+  Comment.findById(req.params.id).then((comment: any) => {
+    if (comment?.user == req.user.id) {
+      let postId = comment.post;
+      comment.remove();
+      Post.findByIdAndUpdate(postId, { $pull: { comments: req.param.id } })
+        .then((data) => {
+          res.send("delete Successfully");
+        })
+        .catch((err) => res.send("There is error"));
+    }
+  });
+};

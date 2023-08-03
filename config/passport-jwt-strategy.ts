@@ -1,16 +1,25 @@
 import { User } from "../models/user";
-
 const passport = require("passport");
-const JWTStrategy = require("passport-jwt").strategy;
-const ExtractJWT = require("passport-jwt").ExtractJWT;
+let JwtStrategy = require("passport-jwt").Strategy;
+let ExtractJwt = require("passport-jwt").ExtractJwt;
 
-let opts = {
-  jwtFroUsermRequest: ExtractJWT.fromAuthHeaderAsBearerToken,
-  secretOrKey: "codeial",
+var cookieExtractor = function (req: any) {
+  var token = null;
+  if (req && req.cookies) {
+    token = req.cookies["jwt"];
+  }
+  return token;
 };
+let opts = {
+  jwtFroUsermRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+  secretOrKey: "codeial",
+  jwtFromRequest: cookieExtractor,
+};
+
+// ...
 passport.use(
-  new JWTStrategy(opts, function (jwtPayload: any, done: any) {
-    User.findById(jwtPayload._id)
+  new JwtStrategy(opts, (jwt_payload: any, done: any) => {
+    User.findById({ id: jwt_payload._id })
       .then((user) => {
         if (user) {
           return done(null, user);
@@ -23,5 +32,4 @@ passport.use(
       });
   })
 );
-
 module.exports = passport;

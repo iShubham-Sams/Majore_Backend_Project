@@ -7,6 +7,7 @@ const cookieParser = require("cookie-parser");
 const passport = require("passport");
 const session = require("express-session");
 const passportLocal = require("./config/passport-local-strategy");
+const passportJWt = require("./config/passport-jwt-strategy");
 const MongoStore = require("connect-mongo");
 require("dotenv").config();
 var multer = require("multer");

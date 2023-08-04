@@ -19,7 +19,7 @@ let opts = {
 // ...
 passport.use(
   new JwtStrategy(opts, (jwt_payload: any, done: any) => {
-    User.findById({ id: jwt_payload._id })
+    User.findOne({ email: jwt_payload.email })
       .then((user) => {
         if (user) {
           return done(null, user);
@@ -27,7 +27,7 @@ passport.use(
           return done(null, false);
         }
       })
-      .catch(() => {
+      .catch((err) => {
         console.log("Error in finding user from JWT");
       });
   })

@@ -10,10 +10,14 @@ export const createV1Session = async (req: Request, res: Response) => {
         message: "Invalid username or password",
       });
     }
+    res.cookie(
+      "jwt",
+      jwt.sign(user.toJSON(), "codeial", { expiresIn: "1000000" })
+    );
     return res.status(200).json({
       message: "Sign in successful, here is your token please keep it safe!",
       data: {
-        token: jwt.sign(user.toJSON(), "codeial", { expiresIn: "10000" }),
+        token: jwt.sign(user.toJSON(), "codeial", { expiresIn: "1000000" }),
       },
     });
   } catch (error) {

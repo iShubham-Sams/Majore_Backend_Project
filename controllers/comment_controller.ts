@@ -2,6 +2,7 @@ import { Response } from "express";
 import { Comment } from "../models/comment";
 import { Post } from "../models/post";
 import { read } from "fs";
+const commetMailer = require("../mailers/comment_mailer");
 
 export const createCommentOverPostController = async (
   req: any,
@@ -10,16 +11,20 @@ export const createCommentOverPostController = async (
   try {
     const post: any = await Post.findById(req.body.post);
     if (post) {
-      const comment = await Comment.create({
+      let comment = await Comment.create({
         content: req.body.content,
         post: req.body.post,
         user: req.user._id,
       });
       post.comments.push(comment);
       post.save();
+      comment = await comment.populate("user", "name email");
+      commetMailer.newComment(comment);
       return res.send("Created Comment");
     }
   } catch (error) {
+    console.log(error);
+
     console.log("Error in creating");
   }
 };
